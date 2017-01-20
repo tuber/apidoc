@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title> 在线接口列表</title>
+    <link rel="stylesheet" href="https://staticfile.qnssl.com/semantic-ui/2.1.6/semantic.min.css">
+    <link rel="stylesheet" href="https://staticfile.qnssl.com/semantic-ui/2.1.6/components/table.min.css">
+    <link rel="stylesheet" href="https://staticfile.qnssl.com/semantic-ui/2.1.6/components/container.min.css">
+    <link rel="stylesheet" href="https://staticfile.qnssl.com/semantic-ui/2.1.6/components/message.min.css">
+
+    <style>
+        /*右侧导航*/
+        .right_nav {
+            position: fixed;
+            top: 15%;
+            right: 0.2343rem;
+            bottom: 7%;
+        }
+
+        .right_nav li {
+            font-size: 1.2125rem;
+            color: #888;
+            margin: 0.1333rem auto;
+            text-align: center;
+            z-index: 999;
+            list-style-type: none
+        }
+
+        .right_nav li a {
+            color: #000;
+            padding-left: 0.3rem
+        }
+    </style>
+</head>
+<body>
+<br/>
+<div class="ui text container" style="max-width: none !important;">
+    <div class="ui floating message">
+        <h1 class="ui header">接口列表</h1>
+        <table class="ui green celled striped table">
+            <thead>
+            <tr>
+                <th>#</th>
+                <th>接口服务</th>
+                <th>接口名称</th>
+                <th>更多说明</th>
+            </tr>
+            </thead>
+            <tbody>
+            <?php
+                $num = 1;
+                $uri = str_ireplace('listAllApis.php', 'checkApiParams.php', $_SERVER['REQUEST_URI']);
+
+
+                foreach ($allApiS as $key => $item) {
+
+            echo "
+            <tr colspan='4' id='js-item-{$key}'>";
+                echo "
+                <td colspan='4' bgcolor='#a9a9a9'>{$key}</td>
+                ";
+                echo "
+            </tr>
+            ";
+
+            if(is_array($item)){
+            foreach($item as $k=>$v){
+            $link = '/doc/service/name/' . $v['service'];
+            $NO = $num++;
+            echo "
+            <tr>
+                <td>{$NO}</td>
+                <td id='js-item-".substr(explode("name/", $link)[1],0,1)."'><a href=\"$link\" target=''>{$v['service']}</a></td>
+                <td>{$v['title']}</td>
+                <td>{$v['desc']}</td>
+            </tr>
+            ";
+            }
+            }
+            }
+            ?>
+            </tbody>
+        </table>
+        <p>&copy; Powered By <a href="http://www.phalapi.net/" target="_blank">PhalApi
+        <p>
+    </div>
+    <ul class="right_nav">
+        <?php
+    foreach ($allApiS as $key => $item) {
+        echo "
+        <li class=''><a href='#js-item-{$key}'>{$key}</a></li>
+        ";
+        }
+        ?>
+    </ul>
+</div>
+</body>
+<script src="//cdn.bootcss.com/jquery/2.2.4/jquery.js"></script>
+<script>
+    $(document).ready(function () {
+        $("ul li a").click(function () {
+            if (location.pathname.replace(/^\//, '') == this.pathname.replace(/^\//, '') && location.hostname == this.hostname) {
+                var $target = $(this.hash);
+                $target = $target.length && $target || $('[name=' + this.hash.slice(1) + ']');
+                if ($target.length) {
+                    var targetOffset = $target.offset().top;
+                    $('html,body').animate({
+                                scrollTop: targetOffset
+                            },
+                            1000);
+                    return false;
+                }
+            }
+        });
+    });
+</script>
+</html>
